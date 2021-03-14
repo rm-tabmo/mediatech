@@ -1,7 +1,7 @@
 import javax.servlet.ServletContext
 import org.scalatra._
-import org.scalatra.example.controllers._
-import org.scalatra.example.persistence.PostgresConnection
+import org.scalatra.mediatech.controllers._
+import org.scalatra.mediatech.persistence.PostgresConnection
 import org.scalatra.swagger.ApiKey
 
 class ScalatraBootstrap extends LifeCycle with PostgresConnection {
@@ -10,9 +10,11 @@ class ScalatraBootstrap extends LifeCycle with PostgresConnection {
   swagger.addAuthorization(ApiKey("Authorization"))
 
   override def init(context: ServletContext) {
-    openDatabaseConnection()
-    context.mount(new ApiController, "/api", "api")
-    context.mount(new CompanyController, "/api/company")
+    //-- init database
+//    openDatabaseConnection()
+
+    //-- configure routes for each controller
+    context.mount(new MediatechController, "/api/mediatech")
     context.mount (new ResourcesApp, "/api-docs")
   }
 

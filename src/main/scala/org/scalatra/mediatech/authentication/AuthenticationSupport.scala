@@ -1,11 +1,11 @@
-package org.scalatra.example.authentication
+package org.scalatra.mediatech.authentication
 
 import java.time.Duration
 
 import com.okta.jwt.{JwtVerificationException, JwtVerifiers}
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatra.ScalatraBase
-import org.scalatra.example.Settings
+import org.scalatra.mediatech.Settings
 
 trait AuthenticationSupport extends ScalatraBase with LazyLogging {
 

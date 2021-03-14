@@ -1,4 +1,4 @@
-package org.scalatra.example.persistence
+package org.scalatra.mediatech.persistence
 
 
 import scalikejdbc._, async._, FutureImplicits._
@@ -8,11 +8,11 @@ import scala.concurrent._
 import org.joda.time.DateTime
 
 case class Company(
-                    id: Long,
-                    name: String,
-                    url: Option[String] = None,
-                    createdAt: DateTime,
-                    deletedAt: Option[DateTime] = None) extends ShortenedNames {
+                     id: Long,
+                     name: String,
+                     url: Option[String] = None,
+                     createdAt: DateTime,
+                     deletedAt: Option[DateTime] = None) extends ShortenedNames {
 
   def save()(implicit session: AsyncDBSession = AsyncDB.sharedSession, cxt: EC = ECGlobal): Future[Company] = Company.save(this)(session, cxt)
   def destroy()(implicit session: AsyncDBSession = AsyncDB.sharedSession, cxt: EC = ECGlobal): Future[Int] = Company.destroy(id)(session, cxt)

@@ -1,4 +1,4 @@
-package org.scalatra.example.controllers
+package org.scalatra.mediatech.controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import org.json4s.{DefaultFormats, Formats}

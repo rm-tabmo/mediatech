@@ -1,4 +1,4 @@
-package org.scalatra.example
+package org.scalatra.mediatech
 
 import com.typesafe.config.ConfigFactory
 

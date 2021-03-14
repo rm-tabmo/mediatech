@@ -1,4 +1,4 @@
-package org.scalatra.example.controllers
+package org.scalatra.mediatech.controllers
 
 import org.scalatra.ScalatraServlet
 import org.scalatra.swagger._

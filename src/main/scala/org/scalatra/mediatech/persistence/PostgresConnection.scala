@@ -1,6 +1,6 @@
-package org.scalatra.example.persistence
+package org.scalatra.mediatech.persistence
 
-import org.scalatra.example.Settings
+import org.scalatra.mediatech.Settings
 import scalikejdbc.ConnectionPool
 import scalikejdbc.async.{AsyncConnectionPool, AsyncConnectionPoolSettings, AsyncConnectionSettings}
 
