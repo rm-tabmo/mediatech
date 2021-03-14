@@ -9,9 +9,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class TableMovie {
 
-  private var movies: ListBuffer[Movie] = new ListBuffer[Movie]()
+  private val movies: ListBuffer[Movie] = new ListBuffer[Movie]()
 
   def findAll():Future[List[Movie]] = Future{movies.toList}
+
+  def insert(movie: Movie):Future[Movie] = Future{
+    movies += movie
+    movie
+  }
+
   def clear():Unit = movies.clear()
 
   def feedMe() : Future[List[Movie]] = Future{
