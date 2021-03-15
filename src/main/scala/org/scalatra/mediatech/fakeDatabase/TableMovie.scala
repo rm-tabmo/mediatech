@@ -7,11 +7,30 @@ import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+/**
+ * Class which simulate Table Movie Crud repository.
+ */
 class TableMovie {
 
   private val movies: ListBuffer[Movie] = new ListBuffer[Movie]()
 
-  def findAll():Future[List[Movie]] = Future{movies.toList}
+  def findAll():Future[List[Movie]] = Future{movies.toList.sortWith((m1, m2) => m1.title < m2.title)}
+
+  def findByGenre(genre:String):Future[List[Movie]] = Future{
+
+    if (genre == null)  movies.sortWith((m1, m2) => m1.title < m2.title).toList
+    else
+      movies.filter(m => m.genre.contains(genre)) //--filter by genre
+        .groupBy(m => m.french_release) //-- group by date
+        .toList.sortBy(_._1.getMillis) //-- sort by date
+        .map(couple => (couple._1, couple._2.sortBy(m => m.title))) //-- sort by title
+        .flatMap((_._2))
+  }
+
+  def findMovieNumberByYears(): Future[Map[Int, Int]] = Future {
+    movies.groupBy(m => m.year).mapValues(_.size)
+  }
+
 
   def insert(movie: Movie):Future[Movie] = Future{
     movies += movie
@@ -21,9 +40,11 @@ class TableMovie {
   def clear():Unit = movies.clear()
 
   def feedMe() : Future[List[Movie]] = Future{
-    movies += Movie("film1","FRA",1990,"originalfilm",DateTime.now(),"synapse",List("comique","burlesque"),5)
-    movies += Movie("film2","US",2090,"the real title",DateTime.now(),"c'est un vrai thriller",List("suspense","thriller"),8)
-    movies += Movie("film3","UK",1950,"uk uk uk",DateTime.now(),"vive Bourvil",List("a leau de rose","drame"),4)
+    val date = DateTime.now()
+
+    movies += Movie("filmZ","UK",1990,"uk uk uk",DateTime.now(),"vive Bourvil",List("comique","drame"),4)
+    movies += Movie("film45","FRA",1990,"originalfilm",date,"synapse",List("comique","burlesque"),5)
+    movies += Movie("film2","US",2090,"the real title",date,"c'est un vrai thriller",List("comique","thriller"),8)
     movies.toList
    }
 }
