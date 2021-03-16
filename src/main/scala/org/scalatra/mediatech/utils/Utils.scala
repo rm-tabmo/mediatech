@@ -1,4 +1,4 @@
-package org.scalatra.mediatech.util
+package org.scalatra.mediatech.utils
 
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -47,5 +47,3 @@ object Utils {
 //  unixDate
 //}
 //}
-
-
