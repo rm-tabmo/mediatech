@@ -7,15 +7,15 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 
-class TableMovieTest extends FunSuite {
+class TableMovieDBTest extends FunSuite {
 
   private val tableMovieMok = new TableMovie
 
   test("TableMovie.findAll") {
 
     tableMovieMok.clear()
-    Await.result[List[Movie]](tableMovieMok.feedMe(), 5 seconds)
-    val resultList = Await.result[List[Movie]](tableMovieMok.findAll(), 5 seconds)
+    Await.result[List[MovieDB]](tableMovieMok.feedMe(), 5 seconds)
+    val resultList = Await.result[List[MovieDB]](tableMovieMok.findAll(), 5 seconds)
     assert(resultList.length == 3)
   }
 
@@ -25,8 +25,8 @@ class TableMovieTest extends FunSuite {
   test("TableMovie.findByGenre") {
 
     tableMovieMok.clear()
-    Await.result[List[Movie]](tableMovieMok.feedMe(), 5 seconds)
-    val resultList = Await.result[List[Movie]](tableMovieMok.findByGenre("comique"), 5 seconds)
+    Await.result[List[MovieDB]](tableMovieMok.feedMe(), 5 seconds)
+    val resultList = Await.result[List[MovieDB]](tableMovieMok.findByGenre("comique"), 5 seconds)
 
     val resultArray = resultList.toArray
     //-- verify returned Movie order
@@ -41,7 +41,7 @@ class TableMovieTest extends FunSuite {
   test("TableMovie.findMovieNumberByYears") {
 
     tableMovieMok.clear()
-    Await.result[List[Movie]](tableMovieMok.feedMe(), 5 seconds)
+    Await.result[List[MovieDB]](tableMovieMok.feedMe(), 5 seconds)
     val resultMap = Await.result[Map[Int, Int]](tableMovieMok.findMovieNumberByYears(), 5 seconds)
 
     //-- verify returned number by date

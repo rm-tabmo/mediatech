@@ -12,11 +12,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
  */
 class TableMovie {
 
-  private val movies: ListBuffer[Movie] = new ListBuffer[Movie]()
+  private val movies: ListBuffer[MovieDB] = new ListBuffer[MovieDB]()
 
-  def findAll():Future[List[Movie]] = Future{movies.toList.sortWith((m1, m2) => m1.title < m2.title)}
+  def findAll():Future[List[MovieDB]] = Future{movies.toList.sortWith((m1, m2) => m1.title < m2.title)}
 
-  def findByGenre(genre:String):Future[List[Movie]] = Future{
+  def findByGenre(genre:String):Future[List[MovieDB]] = Future{
 
     if (genre == null)  movies.sortWith((m1, m2) => m1.title < m2.title).toList
     else
@@ -32,19 +32,19 @@ class TableMovie {
   }
 
 
-  def insert(movie: Movie):Future[Movie] = Future{
+  def insert(movie: MovieDB):Future[MovieDB] = Future{
     movies += movie
     movie
   }
 
   def clear():Unit = movies.clear()
 
-  def feedMe() : Future[List[Movie]] = Future{
+  def feedMe() : Future[List[MovieDB]] = Future{
     val date = DateTime.now()
 
-    movies += Movie("filmZ","UK",1990,"uk uk uk",DateTime.now(),"vive Bourvil",List("comique","drame"),4)
-    movies += Movie("film45","FRA",1990,"originalfilm",date,"synapse",List("comique","burlesque"),5)
-    movies += Movie("film2","US",2090,"the real title",date,"c'est un vrai thriller",List("comique","thriller"),8)
+    movies += MovieDB("filmZ","UK",1990,"uk uk uk",DateTime.now(),"vive Bourvil",List("comique","drame"),4)
+    movies += MovieDB("film45","FRA",1990,"originalfilm",date,"synapse",List("comique","burlesque"),5)
+    movies += MovieDB("film2","US",2090,"the real title",date,"c'est un vrai thriller",List("comique","thriller"),8)
     movies.toList
    }
 }

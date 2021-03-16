@@ -6,7 +6,7 @@ import scalikejdbc.async._
 
 import scala.concurrent._
 
-case class Movie(
+case class MovieDB(
                   title: String,//-- <= 250 char
                   country: String,//-- Format ISO 3166-1 alpha-3
                   year: Int,
