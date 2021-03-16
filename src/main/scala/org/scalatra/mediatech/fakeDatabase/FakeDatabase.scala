@@ -4,6 +4,7 @@ object FakeDatabase {
 
   private val tableMovie = new TableMovie()
   def tableMovies():TableMovie = tableMovie
+
 }
 
 
