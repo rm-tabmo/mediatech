@@ -11,6 +11,24 @@ object MediatechUtils {
   val dateTimeFormat = DateTimeFormat.forPattern("yyyy/MM/dd")
   val errorMessages = new StringBuilder()
 
+  val iso3 = List("ABW","AFG", "AGO", "AIA", "ALA" , "ALB",  "AND",  "ARE",  "ARG", "ARM" , "ASM", "ATA", "ATF", "ATG",
+    "AUS","AUT", "AZE", "BDI", "BEL", "BEN", "BES", "BFA", "BGD", "BGR", "BHR", "BHS", "BIH", "BLM", "BLR",  "BLZ", "BMU",
+    "BOL", "BRA","BRB", "BRN", "BTN", "BVT", "BWA", "CAF", "CAN",  "CCK", "CHE", "CHL", "CHN", "CIV","CMR",  "COD", "COG",
+    "COK",  "COL", "COM","CPV", "CRI", "CUB", "CUW ",  "CXR","CYM", "CYP","CZE", "DEU", "DJI","DMA", "DNK", "DOM", "DZA",
+    "ECU", "EGY", "ERI", "ESH", "ESP", "EST", "ETH",  "FIN", "FJI", "FLK ", "FRA", "FRO ", "FSM  ", "GAB",  "GBR", "GEO",
+    "GGY", "GHA", "GIB", "GIN", "GLP", "GMB", "GNB","GNQ", "GRC", "GRD",  "GRL",  "GTM",  "GUF", "GUM", "GUY",
+    "HKG", "HMD", "HND", "HRV", "HTI ", "HUN", "IDN", "IMN", "IND", "IOT", "IRL", "IRN", "IRQ",
+    "ISL", "ISR", "ITA ", "JAM",  "JEY", "JOR", "JPN", "KAZ", "KEN", "KGZ", "KHM", "KIR", "KNA",
+    "KOR", "KWT", "LAO", "LBN", "LBR", "LBY", "LCA", "LIE", "LKA", "LSO", "LTU", "LUX", "LVA", "MAC",
+    "MAF", "MAR", "MCO", "MDA", "MDG", "MDV", "MEX", "MHL", "MKD", "MLI", "MLT", "MMR", "MNE", "MNG","MNP",
+    "MOZ", "MRT", "MSR", "MTQ", "MUS", "MWI", "MYS", "MYT","NAM", "NCL","NER", "NFK","NGA", "NIC","NIU",
+    "NLD", "NOR", "NPL", "NRU","NZL", "OMN", "PAK", "PAN","PCN", "PER", "PHL", "PLW", "PNG", "POL", "PRI",
+    "PRK", "PRT", "PRY", "PSE", "PYF", "QAT", "REU", "ROU",  "RUS", "RWA", "SAU", "SDN", "SEN", "SGP", "SGS", "SHN",
+    "SJM", "SLB", "SLE", "SLV", "SMR", "SOM", "SPM", "SRB", "SSD", "STP", "SUR", "SVK", "SVN", "SWE", "SWZ","SXM",
+    "SYC", "SYR", "TCA", "TCD", "TGO", "THA", "TJK",  "TKL", "TKM", "TLS","TON", "TTO", "TUN", "TUR", "TUV",
+    "TWN","TZA", "UGA", "UKR", "UMI", "URY", "USA",  "UZB", "VAT","VCT", "VEN", "VGB", "VIR", "VNM", "VUT", "WLF",
+    "WSM", "YEM", "ZAF", "ZMB", "ZWE")
+
   def movieBeanToMovieDB(movieBean:MovieBean) :Either[String, MovieDB] = {
 
       errorMessages.clear()
@@ -21,7 +39,6 @@ object MediatechUtils {
       case Right(title) => destMovieDB.title = title
       case Left(error) => errorMessages.append(error)
     }
-
     //country: String,//-- Format ISO 3166-1 alpha-3 oui
     isOKCountry(movieBean.country) match {
       case Right(country) => destMovieDB.country = country
@@ -64,6 +81,10 @@ object MediatechUtils {
       Left(errorMessages.insert(0, "Misformatted Movie datas : \n").toString())
   }
 
+  /**
+   * Returns Either where Right contain title in accordance with specifications
+   * or Left which contains error message.
+   */
   def isOKTitle(title :String) :Either[String, String] = {
     if (title.isEmpty)
       Left("Title should not be empty.")
@@ -73,14 +94,25 @@ object MediatechUtils {
       Right(title)
   }
 
-
+  /**
+   * Returns Either where Right contain country in accordance with specifications
+   * or Left which contains error message.
+   */
   def isOKCountry(country :String) :Either[String, String] = {
-    ISOCountry.from(country) match {
-      case Some(iso) => Right(iso.alpha3Code)
-      case None => Left("country : misformatted country it should be ISO 3166-1 alpha-3.")
-    }
+    if (iso3.contains(country))
+      Right(country)
+    else
+      Left("country : misformatted country it should be ISO 3166-1 alpha-3.")
+//    ISOCountry.from(country) match {
+//      case Some(iso) => Right(iso.alpha3Code)
+//      case None => Left("country : misformatted country it should be ISO 3166-1 alpha-3.")
+//    }
   }
 
+  /**
+   * Returns Either where Right contain original_title in accordance with specifications
+   * or Left which contains error message.
+   */
   def isOKOriginalTitle(originalTitle :String, country:String) :Either[String, String] = {
     if (originalTitle.length > 250)
       Left("original_title : is too long.")
@@ -90,7 +122,10 @@ object MediatechUtils {
       Right(originalTitle)
   }
 
-
+  /**
+   * Returns Either where Right french_release title in accordance with specifications
+   * or Left which contains error message.
+   */
   def isOKFrenchRelease(dateStr :String) :Either[String, DateTime] = {
     if(dateStr.isEmpty)
       Right(null)//-- TODO option.NONE
@@ -103,7 +138,10 @@ object MediatechUtils {
       }
   }
 
-
+  /**
+   * Returns Either where Right contain genre in accordance with specifications
+   * or Left which contains error message.
+   */
   def isOKGenre(genre :List[String]) :Either[String, List[String]] = {
     if (genre.isEmpty)
       Left("genre : You should specify at least one genre.")
@@ -113,6 +151,10 @@ object MediatechUtils {
       Right(genre.map(s => s.toLowerCase()))
   }
 
+  /**
+   * Returns Either where Right contain ranking in accordance with specifications
+   * or Left which contains error message.
+   */
   def isOKRanking(ranking :Int) :Either[String, Int] = {
    if (ranking < 0 || ranking > 10)
      Left("ranking : Should be between [0; 10].")
@@ -130,3 +172,4 @@ object MediatechUtils {
       movie.genre, movie.ranking)
   }
 }
+
