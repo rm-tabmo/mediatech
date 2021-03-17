@@ -17,8 +17,8 @@ class MediatechController extends BaseController {
     val movieBean = parsedBody.extract[MovieBean]
 
     MediatechUtils.movieBeanToMovieDB(movieBean) match {
-      case Left(mdb) => MediatechUtils.movieDBToMovieBean(Await.result[MovieDB](FakeDatabase.tableMovies().insert(mdb), 5 second))
-      case Right(errorMessage) =>  halt(400, errorMessage)
+      case Right(mdb) => MediatechUtils.movieDBToMovieBean(Await.result[MovieDB](FakeDatabase.tableMovies().insert(mdb), 5 second))
+      case Left(errorMessage) =>  halt(400, errorMessage)
     }
   }
 

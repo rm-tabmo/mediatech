@@ -7,7 +7,7 @@ class MovieDB (
   private var _country: String = "",
   private var _year: Int = 0,
   private var _original_title: String = "",
-  private var _french_release: DateTime = DateTime.now(),
+  private var _french_release: DateTime = DateTime.now(),//-- change into option[DateTime]
   private var _synopsis: String = "",
   private var _genre: List[String] = List.empty,
   private var _ranking: Int  = 0
