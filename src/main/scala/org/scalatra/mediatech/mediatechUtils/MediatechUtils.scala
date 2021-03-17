@@ -4,6 +4,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.scalatra.mediatech.controllers.MovieBean
 import org.scalatra.mediatech.fakeDatabase.MovieDB
+import com.vitorsvieira.iso._
 
 object MediatechUtils {
 
@@ -21,9 +22,11 @@ object MediatechUtils {
       case Left(error) => errorMessages.append(error)
     }
 
-
     //country: String,//-- Format ISO 3166-1 alpha-3 oui
-    //-- TODO
+    isOKCountry(movieBean.country) match {
+      case Right(country) => destMovieDB.country = country
+      case Left(error) => errorMessages.append(error)
+    }
 
     //year: Int, oui
     destMovieDB.year = movieBean.year
@@ -71,15 +74,12 @@ object MediatechUtils {
   }
 
 
-  //  def isOKCountry(country :String) :Either[String, String] = {
-  //    try {
-  //      val frenchReleaseDate = DateTime.parse(dateStr, dateTimeFormat)
-  //      Left(frenchReleaseDate)
-  //    } catch {
-  //      case _: Throwable => Right("Wrong Date format. Expected : yyyy/MM/dd")
-  //    }
-  //  }
-
+  def isOKCountry(country :String) :Either[String, String] = {
+    ISOCountry.from(country) match {
+      case Some(iso) => Right(iso.alpha3Code)
+      case None => Left("country : misformatted country it should be ISO 3166-1 alpha-3.")
+    }
+  }
 
   def isOKOriginalTitle(originalTitle :String, country:String) :Either[String, String] = {
     if (originalTitle.length > 250)
@@ -129,5 +129,4 @@ object MediatechUtils {
       frenchReleaseBean, movie.synopsis,
       movie.genre, movie.ranking)
   }
-
 }

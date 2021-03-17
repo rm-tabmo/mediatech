@@ -31,6 +31,8 @@ libraryDependencies ++= Seq(
   "com.github.jasync-sql" % "jasync-postgresql" % "1.0.+",
   "org.scalikejdbc" %% "scalikejdbc-joda-time" % scalikejdbcVersion,
 
+  "com.vitorsvieira" %% "scala-iso" % "0.1.2",
+
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "com.typesafe.akka" %% "akka-actor" % "2.5.3"
 )

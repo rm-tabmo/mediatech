@@ -1,7 +1,9 @@
 package org.scalatra.mediatech.controllers
 
+import org.scalatra.BadRequest
 import org.scalatra.mediatech.fakeDatabase.{FakeDatabase, MovieDB}
 import org.scalatra.mediatech.mediatechUtils.MediatechUtils
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -14,12 +16,15 @@ class MediatechController extends BaseController {
 
   post("/addMovie") {
 
+    //-- TODO route exception
+    //-- BadRequest()
     val movieBean = parsedBody.extract[MovieBean]
 
     MediatechUtils.movieBeanToMovieDB(movieBean) match {
       case Right(mdb) => MediatechUtils.movieDBToMovieBean(Await.result[MovieDB](FakeDatabase.tableMovies().insert(mdb), 5 second))
       case Left(errorMessage) =>  halt(400, errorMessage)
     }
+
   }
 
   get("/findAll") {
