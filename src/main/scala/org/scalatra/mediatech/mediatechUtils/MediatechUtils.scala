@@ -10,6 +10,7 @@ object MediatechUtils {
 
   val dateTimeFormat = DateTimeFormat.forPattern("yyyy/MM/dd")
   val errorMessages = new StringBuilder()
+  val lineSep = "\n"
 
   val iso3 = List("ABW","AFG", "AGO", "AIA", "ALA" , "ALB",  "AND",  "ARE",  "ARG", "ARM" , "ASM", "ATA", "ATF", "ATG",
     "AUS","AUT", "AZE", "BDI", "BEL", "BEN", "BES", "BFA", "BGD", "BGR", "BHR", "BHS", "BIH", "BLM", "BLR",  "BLZ", "BMU",
@@ -37,12 +38,12 @@ object MediatechUtils {
     //title: String,//-- <= 250 char oui
     isOKTitle(movieBean.title) match {
       case Right(title) => destMovieDB.title = title
-      case Left(error) => errorMessages.append(error)
+      case Left(error) => errorMessages.append(error+lineSep)
     }
     //country: String,//-- Format ISO 3166-1 alpha-3 oui
     isOKCountry(movieBean.country) match {
       case Right(country) => destMovieDB.country = country
-      case Left(error) => errorMessages.append(error)
+      case Left(error) => errorMessages.append(error+lineSep)
     }
 
     //year: Int, oui
@@ -51,13 +52,13 @@ object MediatechUtils {
     //original_title: String, //-- Requis si le film est de nationalité étrangère (country != "FRA"), 250 caractères maximum
     isOKOriginalTitle(movieBean.original_title, movieBean.country) match {
       case Right(oriTitle) => destMovieDB.original_title = oriTitle
-      case Left(error) => errorMessages.append(error)
+      case Left(error) => errorMessages.append(error+lineSep)
     }
 
     //french_release: DateTime,//-- format YYYY/MM/DD (ex: 2016/08/23)
     isOKFrenchRelease(movieBean.french_release) match {
       case Right(date) => destMovieDB.french_release = date
-      case Left(error) => errorMessages.append(error)
+      case Left(error) => errorMessages.append(error+lineSep)
     }
 
     //synopsis: String
@@ -67,7 +68,7 @@ object MediatechUtils {
     //genre: List[String],
     isOKGenre(movieBean.genre) match {
       case Right(genre) => destMovieDB.genre = genre
-      case Left(error) => errorMessages.append(error)
+      case Left(error) => errorMessages.append(error+lineSep)
     }
     //ranking: String //-- 	note entre 0 et 10, pas de 0.1
     isOKRanking(movieBean.ranking) match {

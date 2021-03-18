@@ -1,53 +1,67 @@
-# Scalatra API With Okta Authentication #
-This is a starter application for anyone who wants to write an API layer using [Scalatra](http://scalatra.org/). Why start here?
-If you're serious about API development, you'll have configs to load, JSON will be necessary, and security will be paramount.
-Instead of using the [Scalatra project generator](http://scalatra.org/getting-started/first-project.html),
-clone this repository for a head start.
-This app demonstrates how to return JSON, verify the origin and authorization Token.
-
-## Application Features
-Instead of the vanilla scalatra project generator, use this project to gain the following functionality out of the box:
-* Logging
-* Typesafe Config
-* Jackson JSON
-* [Swagger Support](http://scalatra.org//guides/2.6/swagger.html)
-* [Okta Authentication](https://developer.okta.com/quickstart/#/angular/java/generic)
-
-## Configuration
-In the `src/main/resources` folder, there is a `resource.conf` file that looks like this:
-```hocon
-base_url = "localhost"
-
-okta {
-    domain: "yourOktaDomain"
-    audience: "api://default"
-    timeout: 1000
-}
+# EPIC 1 Mediatech Scalatra API 
+## Prerequisite Install ##
+```shell script
+> sbt
+> jdk8 or higher
 ```
- Copy the contents of that file, name it `application.conf`, and replace your Okta domain.
 
 ## Build & Run ##
 
 ```shell script
-$ cd back-end
+$ cd ${whereYouPutTheProject}/mediatech
 $ sbt
 > jetty:start
-> browse
 ```
-If `browse` doesn't launch your browser, manually open [http://localhost:8080/](http://localhost:8080/) in your browser.
 
-If actively developing, use to have sbt watch for changes.
-```sbt
+For developing, use this command to refresh changes
+```
 ~;jetty:stop;jetty:start
 ```
 
-### Additional Notes
-Okta has great tutorials around Spring and generic java. I thought it might be useful to have a scala based example.
+## Routes Examples ##
+#### POST ####
+US 1-1 : store Movie.
+```
+URL : http://localhost:8080/api/mediatech/US11addMovie
+```
 
+```
+Body : 
+{
+  "title": "Tabmo",
+  "country": "FRA",
+  "year": 1990,
+  "original_title": "Tabmo va à la plage",
+  "french_release": "2015/11/12",
+  "synopsis": "c'est un film",
+  "genre": [
+    "thriller",
+    "comique"
+  ],
+  "ranking": 8
+}
+```
 
-### Contributing
-Feel free to make a pull request if you add basic functionality that would help a fledgling API
-on its way to being production ready.
+#### GET ####
+US 1-2 : En tant qu'utilisateur, je veux lister les films préalablement enregistées, en filtrant par genre
 
-:)
+```
+URL : http://localhost:8080/api/mediatech/US12findByGenre/:genre (comique)
+```
+
+US 1-3 : En tant qu'utilisateur, je veux connaitre le nombre de films présents dans la médiathèque par année de production
+```
+URL : http://localhost:8080/api/mediatech/US13findByNumberYear
+```
+
+#### Custom routes ####
+To store quickly some Movies to test
+```
+URL : http://localhost:8080/api/mediatech/feedMe
+```
+
+To get quickly all Movies
+```
+URL : http://localhost:8080/api/mediatech/findAll
+```
 

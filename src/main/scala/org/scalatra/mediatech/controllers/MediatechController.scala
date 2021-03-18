@@ -14,17 +14,16 @@ class MediatechController extends BaseController {
     listResult.map(x => MediatechUtils.movieDBToMovieBean(x))
   }
 
-  post("/addMovie") {
+  post("/US11addMovie") {
 
-    //-- TODO route exception
-    //-- BadRequest()
-    val movieBean = parsedBody.extract[MovieBean]
+    parsedBody.extractOpt[MovieBean] match {
+      case Some(movieBean) => MediatechUtils.movieBeanToMovieDB(movieBean) match {
+                                case Right(mdb)  => MediatechUtils.movieDBToMovieBean(Await.result[MovieDB](FakeDatabase.tableMovies().insert(mdb), 5 second))
+                                case Left(errorMessage) => halt(400, errorMessage)
+                              }
 
-    MediatechUtils.movieBeanToMovieDB(movieBean) match {
-      case Right(mdb) => MediatechUtils.movieDBToMovieBean(Await.result[MovieDB](FakeDatabase.tableMovies().insert(mdb), 5 second))
-      case Left(errorMessage) =>  halt(400, errorMessage)
+      case None => BadRequest("Given json is unvalid.")
     }
-
   }
 
   get("/findAll") {
@@ -32,16 +31,14 @@ class MediatechController extends BaseController {
     listResult.map(x => MediatechUtils.movieDBToMovieBean(x))
   }
 
-  get("/hello/:name") {
-    // Matches "GET /hello/foo" and "GET /hello/bar"
-    // params("name") is "foo" or "bar"
-    val name:String = params.getOrElse("name", halt(400))
-    Test("hello", name)
+  get("/US12findByGenre/:genre") {
+    val listResult: Seq[MovieDB] = Await.result[List[MovieDB]](FakeDatabase.tableMovies().findByGenre(params("genre").toLowerCase()), 5 seconds)
+    listResult.map(x => MediatechUtils.movieDBToMovieBean(x))
   }
 
-  post("/testBody") {
-    parsedBody.extract[Test]
+
+  get("/US13findByNumberYear") {
+   Await.result[Map[Int, Int]](FakeDatabase.tableMovies().findMovieNumberByYears(), 5 seconds)
   }
 }
 
-case class Test(titre: String, name: String )
