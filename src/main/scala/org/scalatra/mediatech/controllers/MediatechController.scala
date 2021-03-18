@@ -36,7 +36,6 @@ class MediatechController extends BaseController {
     listResult.map(x => MediatechUtils.movieDBToMovieBean(x))
   }
 
-
   get("/US13findByNumberYear") {
    Await.result[Map[Int, Int]](FakeDatabase.tableMovies().findMovieNumberByYears(), 5 seconds)
   }

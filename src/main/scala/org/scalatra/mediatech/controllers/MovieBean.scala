@@ -1,7 +1,5 @@
 package org.scalatra.mediatech.controllers
 
-import org.joda.time.DateTime
-
 case class MovieBean(
                   title: String,//-- <= 250 char
                   country: String,//-- Format ISO 3166-1 alpha-3
