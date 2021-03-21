@@ -3,8 +3,14 @@ package org.scalatra.mediatech.mediatechUtils
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.scalatra.mediatech.controllers.MovieBean
-import org.scalatra.mediatech.fakeDatabase.MovieDB
+import org.scalatra.mediatech.fakeDatabase.{FakeDatabase, MovieDB}
 import com.vitorsvieira.iso._
+
+
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.util
 
 object MediatechUtils {
 
@@ -30,6 +36,15 @@ object MediatechUtils {
     "TWN","TZA", "UGA", "UKR", "UMI", "URY", "USA",  "UZB", "VAT","VCT", "VEN", "VGB", "VIR", "VNM", "VUT", "WLF",
     "WSM", "YEM", "ZAF", "ZMB", "ZWE")
 
+
+
+  /**
+   * Convert a MovieBean object case class use to get params and JSon parsing
+   * into Case class Movie Database object adapted for fake crud repository.
+   *
+   * Moreover check all params from MovieBean and return Right(MovieDB) if
+   * all params are efficient else return Left(errorMessage).
+   */
   def movieBeanToMovieDB(movieBean:MovieBean) :Either[String, MovieDB] = {
 
       errorMessages.clear()
@@ -163,6 +178,61 @@ object MediatechUtils {
      Right(ranking)
   }
 
+  /**
+   * Filter in database from column Name and given value.
+   */
+  @throws(classOf[IllegalArgumentException])
+  @throws(classOf[NumberFormatException])
+  def findByPredicate(columName: String, value :String) :List[MovieBean] = {
+    val filterPredic = getPredicate(columName, value)
+    val movies = Await.result[List[MovieDB]](FakeDatabase.tableMovies().findByPredicate(filterPredic), 5 seconds)
+    movies.map(m => movieDBToMovieBean(m))
+  }
+
+
+  /**
+   * Return a predicate to filter Movie in db in function of column name
+   * and given value.
+   */
+    @throws(classOf[IllegalArgumentException])
+    @throws(classOf[NumberFormatException])
+  def getPredicate(columnName: String, value: String): (MovieDB => Boolean) = {
+
+    columnName match {
+      case "title" => {
+        movie => movie.title.equals(value)
+      }
+      case "country" => {
+        movie => movie.country.equals(value)
+      }
+      case "year" => {
+        val yearVal :Int = Integer.parseInt(value)
+        p => p.year.equals(yearVal)
+      }
+      case "original_title" => {
+        p => p.original_title.equals(value)
+      }
+      case "french_release" => {
+        p => p.french_release.equals(DateTime.parse(value, dateTimeFormat))
+      }
+      case "synopsis" => {
+        p => p.synopsis.equals(value)
+      }
+      case "genre" => {
+        p => p.genre.contains(value.toLowerCase)
+      }
+      case "ranking" => {
+        p => p.ranking.equals(Integer.parseInt(value))
+      }
+      case _ => throw new IllegalArgumentException(s"Unknow columnName named : $columnName. " +
+        s"Expected values [title, country, year, original_title, synopsis, genre or ranking]")
+    }
+  }
+
+  /**
+   * Convert MovieDB database model into MovieBean case class object
+   * use for JSon parsing
+   */
   def movieDBToMovieBean(movie: MovieDB):MovieBean = {
 
     val frenchReleaseBean: String = dateTimeFormat.print(movie.french_release)

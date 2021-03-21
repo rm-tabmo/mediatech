@@ -31,6 +31,10 @@ class MediatechController extends BaseController {
     listResult.map(x => MediatechUtils.movieDBToMovieBean(x))
   }
 
+  get("/findByPredicate/:columnName/:value") {
+    MediatechUtils.findByPredicate(params("columnName"), params("value"))
+  }
+
   get("/US12findByGenre/:genre") {
     val listResult: Seq[MovieDB] = Await.result[List[MovieDB]](FakeDatabase.tableMovies().findByGenre(params("genre").toLowerCase()), 5 seconds)
     listResult.map(x => MediatechUtils.movieDBToMovieBean(x))
